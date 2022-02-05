@@ -8,8 +8,13 @@ const userSchema = new Schema({
         type: String,
         enum: ["owner", "housekeeping", "front office", "supervisor"]
     },
-    password: String
-})
+    password: String,
+    group: {
+        type: Schema.Types.ObjectId,
+        ref: "Group"
+    }})
+
+userSchema.plugin(passportLocalMongoose);
 
 const User = mongoose.model("User", userSchema);
 

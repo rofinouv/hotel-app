@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Guest = require("../models/Guest")
 const Room = require("../models/Room")
+const User = require("../models/User")
 
 mongoose.connect('mongodb://localhost:27017/hotel-app')
   .then(() => {
@@ -115,4 +116,15 @@ const seedRoom = async function() {
 // seedRoom().then(() => {
 //     db.close()
 // })
+
+const seedUser = async function() {
+    await User.deleteMany({});
+    for (let i = 0; i < 3; i++) {
+        const user = new User({
+            name: `${sample(firstNames)}, ${sample(secondNames)}`,
+            email: `${sample(firstNames)}@mail.com`,
+            
+        })
+    }
+}
 
