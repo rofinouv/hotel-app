@@ -3,8 +3,16 @@ const { Schema } = mongoose;
 const passportLocalMongoose = require("passport-local-mongoose")
 
 const userSchema = new Schema({
-    // name: String,
-    email: String,
+    name: String,
+    // email: String,
+    // name: {
+    //     firstName: {
+    //         type: String
+    //     },
+    //     lastName: {
+    //         type: String
+    //     }
+    // },
     role: {
         type: String,
         enum: ["owner", "housekeeping", "front office", "supervisor"]

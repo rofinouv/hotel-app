@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
+}
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -14,8 +18,10 @@ const flash = require("connect-flash")
 
 
 
+// database url
+const dbUrl = process.env.DB_URL
 
-mongoose.connect('mongodb://localhost:27017/hotel-app')
+mongoose.connect(dbUrl)
     .then(() => {
         console.log("Database Connected");
     })
@@ -27,6 +33,7 @@ app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
 app.use(methodOverride("_method"))
 app.use(express.urlencoded({extended: true}))
+app.use(express.json({type: "application/json"}))
 
 
 
@@ -54,7 +61,7 @@ app.use(flash())
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(new LocalStrategy(User.authenticate()));
+passport.use(new LocalStrategy( User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
@@ -62,12 +69,18 @@ passport.deserializeUser(User.deserializeUser());
 
 
 app.get("/", (req, res) => {
+    req.session.name = "imran"
+    console.log(req.session);
     res.send("hello imran")
 })
 
 app.post("/login", passport.authenticate("local"), async (req, res) => {
     try {
-        res.send("post req")
+        const success = {
+            text: "success"
+        }
+        console.log(req.session);
+        res.json(req.session)
     }
     catch {
         res.send("failed")
@@ -75,8 +88,8 @@ app.post("/login", passport.authenticate("local"), async (req, res) => {
 })
 
 app.post("/register", async (req, res) => {
-    const { username, email, password } = req.body;
-    const user = new User({email: email, username: username});
+    const { email, name, password } = req.body;
+    const user = new User({name: name, username: email});
     const newUser = await User.register(user, password);
     
     
